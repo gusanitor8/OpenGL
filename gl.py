@@ -58,4 +58,7 @@ class Renderer(object):
                                1, GL_FALSE, glm.value_ptr(self.projectionMatrix))
 
         for obj in self.scene:
+            if self.activeShader is not None:
+                glUniformMatrix4fv(glGetUniformLocation(self.activeShader, 'projectionMatrix'),
+                                   1, GL_FALSE, glm.value_ptr(obj.getModelMatrix()))
             obj.render()

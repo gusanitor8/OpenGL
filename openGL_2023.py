@@ -18,13 +18,13 @@ clock = pygame.time.Clock()
 
 rend = Renderer(screen)
 rend.setShaders(vertex_shader, fragment_shader)
-triangle = [
+triangleData = [
     -0.5, -0.5, 0.0, 1.0, 0.0, 0.0,
     0.5, -0.5, 0.0, 0.0, 1.0, 0.0,
     0.0, 0.5, 0.0, 0.0, 0.0, 1.0
 ]
 
-triangleModel = Model(triangle)
+triangleModel = Model(triangleData)
 triangleModel.position.z = -5
 triangleModel.scale = glm.vec3(5, 5, 5)
 rend.scene.append(triangleModel)
