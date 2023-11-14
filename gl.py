@@ -1,6 +1,6 @@
 import glm
 from OpenGL.GL import *
-
+from OpenGL.GL.shaders import compileProgram, compileShader
 
 class Renderer:
     def __init__(self, screen):
@@ -14,9 +14,24 @@ class Renderer:
 
         self.scene = []
 
+        self.activeShader = None
+
+    def setShaders(self, vertexShader, fragmentShader):
+        if vertexShader is not None and fragmentShader is not None:
+            self.activeShader = compileProgram(compileShader(vertexShader, GL_VERTEX_SHADER),
+                                               compileShader(fragmentShader, GL_FRAGMENT_SHADER))
+            glUseProgram(self.activeShader)
+        else:
+            self.activeShader = None
+
+
+
     def render(self):
         glClearColor(self.clearColor[0], self.clearColor[1], self.clearColor[2], 1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+        if self.activeShader is not None:
+            glUseProgram(self.activeShader)
 
         for obj in self.scene:
             obj.render()

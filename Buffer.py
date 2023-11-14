@@ -30,12 +30,25 @@ class Buffer:
             3,
             GL_FLOAT,
             GL_FALSE,
-            4 * 3,
+            4 * 6,
             ctypes.c_void_p(0)
         )
 
         glEnableVertexAttribArray(0)
 
+
+        # atributo de colores
+        glVertexAttribPointer(
+            1,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            4 * 6,
+            ctypes.c_void_p(4 * 3)
+        )
+        glEnableVertexAttribArray(1)
+
         glDrawArrays(GL_TRIANGLES,
                      0,
-                     int(len(self.vertBuffer) / 3))
+                     int(len(self.vertBuffer) / 6))
+
