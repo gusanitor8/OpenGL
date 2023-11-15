@@ -42,29 +42,22 @@ while isRunning:
             if event.key == pygame.K_ESCAPE:
                 isRunning = False
 
-    if keys[pygame.K_RIGHT]:
-        if rend.clearColor[0] < 1.0:
-            rend.clearColor[0] += deltaTime
+    if keys[pygame.K_d]:
+        rend.camPosition.x += 2 * deltaTime
+    elif keys[pygame.K_a]:
+        rend.camPosition.x -= 2 * deltaTime
 
-    elif keys[pygame.K_LEFT]:
-        if rend.clearColor[0] > 0.0:
-            rend.clearColor[0] -= deltaTime
+    if keys[pygame.K_s]:
+        rend.camPosition.z += 2 * deltaTime
+    elif keys[pygame.K_w]:
+        rend.camPosition.z -= 2 * deltaTime
 
-    elif keys[pygame.K_UP]:
-        if rend.clearColor[1] < 1.0:
-            rend.clearColor[1] += deltaTime
+    if keys[pygame.K_q]:
+        rend.camPosition.y += 5 * deltaTime
+    elif keys[pygame.K_e]:
+        rend.camPosition.y -= 5 * deltaTime
 
-    elif keys[pygame.K_DOWN]:
-        if rend.clearColor[1] > 0.0:
-            rend.clearColor[1] -= deltaTime
 
-    elif keys[pygame.K_x]:
-        if rend.clearColor[2] < 1.0:
-            rend.clearColor[2] += deltaTime
-
-    elif keys[pygame.K_z]:
-        if rend.clearColor[2] > 0.0:
-            rend.clearColor[2] -= deltaTime
 
     rend.render()
     pygame.display.flip()
