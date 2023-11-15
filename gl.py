@@ -16,6 +16,8 @@ class Renderer:
         self.scene = []
         self.activeShader = None
 
+        self.dirLight = glm.vec3(1,0,0)
+
         # view matrix
         self.camPosition = glm.vec3(0, 0, 0)
         self.camRotation = glm.vec3(0, 0, 0)
@@ -68,6 +70,10 @@ class Renderer:
                                1,
                                GL_FALSE,
                                glm.value_ptr(self.projectionMatrix))
+
+            glUniform3fv(glGetUniformLocation(self.activeShader, 'dirLight'),
+                               1,
+                               glm.value_ptr(self.dirLight))
 
         for obj in self.scene:
             if self.activeShader is not None:

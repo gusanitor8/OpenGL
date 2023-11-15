@@ -55,7 +55,7 @@ class Model:
             3,
             GL_FLOAT,
             GL_FALSE,
-            4 * 5,
+            4 * 8,
             ctypes.c_void_p(0)
         )
 
@@ -68,8 +68,19 @@ class Model:
             2,
             GL_FLOAT,
             GL_FALSE,
-            4 * 5,
+            4 * 8,
             ctypes.c_void_p(4 * 3)
+        )
+        glEnableVertexAttribArray(1)
+
+        # atributo de normales
+        glVertexAttribPointer(
+            2,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            4 * 8,
+            ctypes.c_void_p(4 * 5)
         )
         glEnableVertexAttribArray(1)
 
@@ -91,4 +102,4 @@ class Model:
 
         glDrawArrays(GL_TRIANGLES,
                      0,
-                     int(len(self.vertBuffer) / 5))
+                     int(len(self.vertBuffer) / 8))

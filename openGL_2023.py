@@ -16,13 +16,13 @@ rend = Renderer(screen)
 rend.setShaders(vertex_shader, fragment_shader)
 
 triangleData = [
-    -0.5, -0.5, 0.0,      0.0, 0.0,
-    -0.5, 0.5, 0.0,       0.0, 1.0,
-    0.5, -0.5, 0.0,       1.0, 0.0,
+    -0.5, -0.5, 0.0,      0.0, 0.0,     0.0, 0.0, 1.0,
+    -0.5, 0.5, 0.0,       0.0, 1.0,     0.0, 0.0, 1.0,
+    0.5, -0.5, 0.0,       1.0, 0.0,     0.0, 0.0, 1.0,
 
-    -0.5, 0.5, 0.0,       0.0, 1.0,
-    0.5, 0.5, 0.0,        1.0, 1.0,
-    0.5, -0.5, 0.0,       1.0, 0.0
+    -0.5, 0.5, 0.0,       0.0, 1.0,     0.0, 0.0, 1.0,
+    0.5, 0.5, 0.0,        1.0, 1.0,     0.0, 0.0, 1.0,
+    0.5, -0.5, 0.0,       1.0, 0.0,     0.0, 0.0, 1.0
 ]
 triangleModel = Model(triangleData)
 triangleModel.loadTexture("textures/caja.jpg")
@@ -62,7 +62,7 @@ while isRunning:
     elif keys[pygame.K_e]:
         rend.camPosition.y -= 5 * deltaTime
 
-
+    triangleModel.rotation.y += 45 * deltaTime
 
     rend.render()
     pygame.display.flip()
