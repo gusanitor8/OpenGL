@@ -1,5 +1,6 @@
 from OpenGL.GL import *
 from numpy import array, float32
+import pygame
 import glm
 
 
@@ -16,6 +17,11 @@ class Model:
         self.position = glm.vec3(0, 0, 0)
         self.rotation = glm.vec3(0, 0, 0)
         self.scale = glm.vec3(0, 0, 0)
+
+    def loadTexture(self, textureName):
+        self.textureSurface = pygame.image.load(textureName)
+        self.textureData = pygame.image.tostring(self.textureSurface, "RGB", True)
+        self.textureBuffer = glGenTextures(1)
 
     def getModelMatrix(self):
         identity = glm.mat4(1)
@@ -49,23 +55,40 @@ class Model:
             3,
             GL_FLOAT,
             GL_FALSE,
-            4 * 6,
+            4 * 5,
             ctypes.c_void_p(0)
         )
 
         glEnableVertexAttribArray(0)
 
-        # atributo de colores
+
+        # atributo de textura
         glVertexAttribPointer(
             1,
-            3,
+            2,
             GL_FLOAT,
             GL_FALSE,
-            4 * 6,
+            4 * 5,
             ctypes.c_void_p(4 * 3)
         )
         glEnableVertexAttribArray(1)
 
+        glActiveTexture(GL_TEXTURE0)
+        glBindTexture(GL_TEXTURE_2D, self.textureBuffer)
+        glTexImage2D(GL_TEXTURE_2D,
+                                 0,
+                                 GL_RGB,
+                                 self.textureSurface.get_width(),
+                                 self.textureSurface.get_height(),
+                                 0,
+                                 GL_RGB,
+                                 GL_UNSIGNED_BYTE,
+                                 self.textureData)
+
+        glGenerateTextureMipmap(self.textureBuffer)
+
+
+
         glDrawArrays(GL_TRIANGLES,
                      0,
-                     int(len(self.vertBuffer) / 6))
+                     int(len(self.vertBuffer) / 5))

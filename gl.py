@@ -10,6 +10,7 @@ class Renderer:
         self.clearColor = [0, 0, 0]
 
         glEnable(GL_DEPTH_TEST)
+        glGenerateMipmap(GL_TEXTURE_2D)
         glViewport(0, 0, self.width, self.height)
 
         self.scene = []
