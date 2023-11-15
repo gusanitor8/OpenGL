@@ -6,10 +6,14 @@ vertex_shader = '''
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 inColor;
 
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+
 out vec4 outColor;
 
 void main(){
-    gl_Position = vec4(position, 1.0);
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
     outColor = vec4(inColor, 1.0);
 }
 '''

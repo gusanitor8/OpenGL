@@ -1,7 +1,8 @@
 import pygame
 from pygame.locals import *
+import glm
 from gl import Renderer
-from Buffer import Buffer
+from Model import Model
 from shaders import vertex_shader, fragment_shader
 
 width = 960
@@ -14,15 +15,19 @@ clock = pygame.time.Clock()
 rend = Renderer(screen)
 rend.setShaders(vertex_shader, fragment_shader)
 
-triangle = [
+triangleData = [
     -0.5, -0.5, 0.0, 1.0, 0.0, 0.0,
     0.5, -0.5, 0.0, 0.0, 1.0, 0.0,
     0.0, 0.5, 0.0, 0.0, 0.0, 1.0
 ]
+triangleModel = Model(triangleData)
+triangleModel.position.z = -5
+triangleModel.scale = glm.vec3(2, 2, 2)
 
-rend.scene.append(Buffer(triangle))
 
-triangleBuffer = Buffer(triangle)
+
+rend.scene.append(triangleModel)
+
 
 isRunning = True
 while isRunning:
