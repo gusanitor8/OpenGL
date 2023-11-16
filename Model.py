@@ -1,11 +1,14 @@
 from OpenGL.GL import *
 from numpy import array, float32
+from Obj import Obj
 import pygame
 import glm
 
 
 class Model:
-    def __init__(self, data, textureName=None, position=(0,0,-5), rotation=(0,0,0), scale=(1,1,1)):
+    def __init__(self, objFileName, textureName=None, position=(0,0,-5), rotation=(0,0,0), scale=(1,1,1)):
+        data = self.readObj(objFileName)
+
         self.vertBuffer = array(data, dtype=float32)
 
         # Vertex Buffer Object
@@ -20,6 +23,29 @@ class Model:
         self.position = glm.vec3(*position)
         self.rotation = glm.vec3(*rotation)
         self.scale = glm.vec3(*scale)
+
+    def readObj(self, filename):
+        obj = Obj(filename)
+        data = []
+
+        for face in obj.faces:
+            for point in face:
+                data.append(obj.vertices[point[0] - 1][0])
+                data.append(obj.vertices[point[0] - 1][1])
+                data.append(obj.vertices[point[0] - 1][2])
+
+                data.append(obj.texcoords[point[1] - 1][0])
+                data.append(obj.texcoords[point[1] - 1][1])
+
+                data.append(obj.normals[point[2] - 1][0])
+                data.append(obj.normals[point[2] - 1][1])
+                data.append(obj.normals[point[2] - 1][2])
+
+        return data
+
+
+
+
 
     def loadTexture(self, textureName):
         self.textureSurface = pygame.image.load(textureName)
