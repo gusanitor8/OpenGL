@@ -5,7 +5,7 @@ import glm
 
 
 class Model:
-    def __init__(self, data):
+    def __init__(self, data, textureName=None, position=(0,0,-5), rotation=(0,0,0), scale=(1,1,1)):
         self.vertBuffer = array(data, dtype=float32)
 
         # Vertex Buffer Object
@@ -14,9 +14,12 @@ class Model:
         # Vertex Array Object
         self.VAO = glGenVertexArrays(1)
 
-        self.position = glm.vec3(0, 0, 0)
-        self.rotation = glm.vec3(0, 0, 0)
-        self.scale = glm.vec3(0, 0, 0)
+        if textureName is not None:
+            self.loadTexture(textureName)
+
+        self.position = glm.vec3(*position)
+        self.rotation = glm.vec3(*rotation)
+        self.scale = glm.vec3(*scale)
 
     def loadTexture(self, textureName):
         self.textureSurface = pygame.image.load(textureName)
