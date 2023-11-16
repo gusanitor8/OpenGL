@@ -29,17 +29,17 @@ class Model:
         data = []
 
         for face in obj.faces:
-            for point in face:
-                data.append(obj.vertices[point[0] - 1][0])
-                data.append(obj.vertices[point[0] - 1][1])
-                data.append(obj.vertices[point[0] - 1][2])
+            for index, vertex in enumerate(face):
+                data.append(obj.vertices[vertex[0] - 1][0])
+                data.append(obj.vertices[vertex[0] - 1][1])
+                data.append(obj.vertices[vertex[0] - 1][2])
 
-                data.append(obj.texcoords[point[1] - 1][0])
-                data.append(obj.texcoords[point[1] - 1][1])
+                data.append(obj.texcoords[vertex[1] - 1][0])
+                data.append(obj.texcoords[vertex[1] - 1][1])
 
-                data.append(obj.normals[point[2] - 1][0])
-                data.append(obj.normals[point[2] - 1][1])
-                data.append(obj.normals[point[2] - 1][2])
+                data.append(obj.normals[vertex[2] - 1][0])
+                data.append(obj.normals[vertex[2] - 1][1])
+                data.append(obj.normals[vertex[2] - 1][2])
 
         return data
 

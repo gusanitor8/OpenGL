@@ -24,12 +24,7 @@ triangleData = [
     0.5, 0.5, 0.0,        1.0, 1.0,     0.0, 0.0, 1.0,
     0.5, -0.5, 0.0,       1.0, 0.0,     0.0, 0.0, 1.0
 ]
-triangleModel = Model("models/model.obj", scale=(2,2,2), textureName="textures/model.bmp")
-#triangleModel.loadTexture("textures/caja.jpg")
-#triangleModel.position.z = -5
-#triangleModel.scale = glm.vec3(2, 2, 2)
-
-
+triangleModel = Model("models/stormtrooper.obj", scale=(2,2,2), position=(0,0,-10), textureName="textures/Stormtrooper_D.png")
 
 rend.scene.append(triangleModel)
 
