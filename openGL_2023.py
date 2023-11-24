@@ -13,7 +13,7 @@ pygame.init()
 screen = pygame.display.set_mode((width, height), pygame.OPENGL | pygame.DOUBLEBUF)
 clock = pygame.time.Clock()
 rend = Renderer(screen, target=(0, 6, -10))
-rend.setShaders(fat_shader , fragment_shader)
+rend.setShaders(vertex_shader, fragment_shader)
 
 triangleData = [
     -0.5, -0.5, 0.0,      0.0, 0.0,     0.0, 0.0, 1.0,
@@ -24,9 +24,13 @@ triangleData = [
     0.5, 0.5, 0.0,        1.0, 1.0,     0.0, 0.0, 1.0,
     0.5, -0.5, 0.0,       1.0, 0.0,     0.0, 0.0, 1.0
 ]
-objectModel = Model("models/stormtrooper.obj", scale=(2, 2, 2), position=(0, 0, -10), textureName="textures/Stormtrooper_D.png")
+stormtrooper_model = Model("models/stormtrooper.obj", scale=(2, 2, 2), position=(0, 0, -10), textureName="textures/Stormtrooper_D.png")
+face_model = Model("models/model.obj", position=(0,0,-10), textureName="textures/model.bmp")
+cat_model = Model("models/cat.obj", position=(0,0,-10), textureName="textures/cat.jpg")
 
-rend.scene.append(objectModel)
+rend.scene.append(stormtrooper_model)
+rend.scene.append(face_model)
+rend.scene.append(cat_model)
 
 
 isRunning = True
@@ -44,6 +48,11 @@ while isRunning:
 
             if event.key == pygame.K_SPACE:
                 rend.toggleFillMode()
+
+            if event.key == pygame.K_RIGHT:
+                rend.next_obj()
+            elif event.key == pygame.K_LEFT:
+                rend.prev_obj()
 
     if keys[pygame.K_d]:
         rend.camPosition.x += 2 * deltaTime
@@ -67,10 +76,6 @@ while isRunning:
         if rend.fatness > 0.0:
             rend.fatness -= 1 * deltaTime
 
-    if keys[pygame.K_RIGHT]:
-        objectModel.rotation.y += 45 * deltaTime
-    elif keys[pygame.K_LEFT]:
-        objectModel.rotation.y -= 45 * deltaTime
 
     #triangleModel.rotation.y += 45 * deltaTime
 

@@ -18,6 +18,7 @@ class Renderer:
         glViewport(0, 0, self.width, self.height)
 
         self.scene = []
+        self.current_obj_idx = 0
         self.activeShader = None
 
         self.dirLight = glm.vec3(1, 0, 0)
@@ -35,6 +36,14 @@ class Renderer:
                                                 self.width / self.height,
                                                 0.1,
                                                 1000)
+
+    def next_obj(self):
+        if self.scene:
+            self.current_obj_idx = (self.current_obj_idx + 1) % len(self.scene)
+
+    def prev_obj(self):
+        if self.scene:
+            self.current_obj_idx = (self.current_obj_idx - 1) % len(self.scene)
 
     def toggleFillMode(self):
         self.fillMode = not self.fillMode
@@ -96,7 +105,8 @@ class Renderer:
             glUniform1f(glGetUniformLocation(self.activeShader, 'fatness'),
                          self.fatness)
 
-        for obj in self.scene:
+        if self.scene:
+            obj = self.scene[self.current_obj_idx]
             if self.activeShader is not None:
                 glUniformMatrix4fv(glGetUniformLocation(self.activeShader, 'modelMatrix'),
                                    1,

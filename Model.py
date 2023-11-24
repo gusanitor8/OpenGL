@@ -7,7 +7,7 @@ import glm
 
 class Model:
     def __init__(self, objFileName, textureName=None, position=(0,0,-5), rotation=(0,0,0), scale=(1,1,1)):
-        data = self.readObj(objFileName)
+        data = Obj(objFileName).parse_data()
 
         self.vertBuffer = array(data, dtype=float32)
 
@@ -111,7 +111,7 @@ class Model:
             4 * 8,
             ctypes.c_void_p(4 * 5)
         )
-        glEnableVertexAttribArray(1)
+        glEnableVertexAttribArray(2)
 
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, self.textureBuffer)
