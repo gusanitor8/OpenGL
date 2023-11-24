@@ -8,6 +8,7 @@ class Renderer:
         _, _, self.width, self.height = screen.get_rect()
 
         self.clearColor = [0, 0, 0]
+        self.elapsed_time= 0.0
 
         glEnable(GL_DEPTH_TEST)
         glGenerateMipmap(GL_TEXTURE_2D)
@@ -74,6 +75,13 @@ class Renderer:
             glUniform3fv(glGetUniformLocation(self.activeShader, 'dirLight'),
                                1,
                                glm.value_ptr(self.dirLight))
+
+            glUniform1f(glGetUniformLocation(self.activeShader, "time"),
+                        self.elapsed_time)
+
+            glUniform3fv(glGetUniformLocation(self.activeShader, 'camPos'),
+                         1,
+                         glm.value_ptr(self.camPosition))
 
         for obj in self.scene:
             if self.activeShader is not None:

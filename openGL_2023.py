@@ -3,63 +3,68 @@ from pygame.locals import *
 import glm
 from gl import Renderer
 from Model import Model
-from shaders import vertex_shader, fragment_shader
+from shaders import vertex_shader, fragment_shader, acid_shader, gloomy_fragment_shader
 
-width = 960
-height = 540
+def run():
+    width = 960
+    height = 540
 
-pygame.init()
+    pygame.init()
 
-screen = pygame.display.set_mode((width, height), pygame.OPENGL | pygame.DOUBLEBUF)
-clock = pygame.time.Clock()
-rend = Renderer(screen)
-rend.setShaders(vertex_shader, fragment_shader)
+    screen = pygame.display.set_mode((width, height), pygame.OPENGL | pygame.DOUBLEBUF)
+    clock = pygame.time.Clock()
+    rend = Renderer(screen)
+    rend.setShaders(vertex_shader, gloomy_fragment_shader)
 
-triangleData = [
-    -0.5, -0.5, 0.0,      0.0, 0.0,     0.0, 0.0, 1.0,
-    -0.5, 0.5, 0.0,       0.0, 1.0,     0.0, 0.0, 1.0,
-    0.5, -0.5, 0.0,       1.0, 0.0,     0.0, 0.0, 1.0,
+    triangleData = [
+        -0.5, -0.5, 0.0,      0.0, 0.0,     0.0, 0.0, 1.0,
+        -0.5, 0.5, 0.0,       0.0, 1.0,     0.0, 0.0, 1.0,
+        0.5, -0.5, 0.0,       1.0, 0.0,     0.0, 0.0, 1.0,
 
-    -0.5, 0.5, 0.0,       0.0, 1.0,     0.0, 0.0, 1.0,
-    0.5, 0.5, 0.0,        1.0, 1.0,     0.0, 0.0, 1.0,
-    0.5, -0.5, 0.0,       1.0, 0.0,     0.0, 0.0, 1.0
-]
-triangleModel = Model("models/stormtrooper.obj", scale=(2,2,2), position=(0,0,-10), textureName="textures/Stormtrooper_D.png")
+        -0.5, 0.5, 0.0,       0.0, 1.0,     0.0, 0.0, 1.0,
+        0.5, 0.5, 0.0,        1.0, 1.0,     0.0, 0.0, 1.0,
+        0.5, -0.5, 0.0,       1.0, 0.0,     0.0, 0.0, 1.0
+    ]
+    triangleModel = Model("models/stormtrooper.obj", scale=(2,2,2), position=(0,0,-10), textureName="textures/Stormtrooper_D.png")
 
-rend.scene.append(triangleModel)
+    rend.scene.append(triangleModel)
 
 
-isRunning = True
-while isRunning:
-    deltaTime = clock.tick(60) / 1000
-    keys = pygame.key.get_pressed()
+    isRunning = True
+    while isRunning:
+        deltaTime = clock.tick(60) / 1000
+        keys = pygame.key.get_pressed()
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            isRunning = False
-
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 isRunning = False
 
-    if keys[pygame.K_d]:
-        rend.camPosition.x += 2 * deltaTime
-    elif keys[pygame.K_a]:
-        rend.camPosition.x -= 2 * deltaTime
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    isRunning = False
 
-    if keys[pygame.K_s]:
-        rend.camPosition.z += 2 * deltaTime
-    elif keys[pygame.K_w]:
-        rend.camPosition.z -= 2 * deltaTime
+        if keys[pygame.K_d]:
+            rend.camPosition.x += 2 * deltaTime
+        elif keys[pygame.K_a]:
+            rend.camPosition.x -= 2 * deltaTime
 
-    if keys[pygame.K_q]:
-        rend.camPosition.y += 5 * deltaTime
-    elif keys[pygame.K_e]:
-        rend.camPosition.y -= 5 * deltaTime
+        if keys[pygame.K_s]:
+            rend.camPosition.z += 2 * deltaTime
+        elif keys[pygame.K_w]:
+            rend.camPosition.z -= 2 * deltaTime
 
-    triangleModel.rotation.y += 45 * deltaTime
+        if keys[pygame.K_q]:
+            rend.camPosition.y += 5 * deltaTime
+        elif keys[pygame.K_e]:
+            rend.camPosition.y -= 5 * deltaTime
 
-    rend.render()
-    pygame.display.flip()
+        triangleModel.rotation.y += 45 * deltaTime
 
-pygame.quit()
+        rend.elapsed_time += deltaTime
+        rend.render()
+        pygame.display.flip()
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    run()
