@@ -10,6 +10,7 @@ layout (location = 2) in vec3 normals;
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform float fatness;
 
 out vec2 UVs;
 out vec3 outNormals;
@@ -21,6 +22,30 @@ void main(){
 }
 '''
 
+fat_shader = '''
+#version 450 core
+
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 texCoords;
+layout (location = 2) in vec3 normals;
+
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+uniform float fatness;
+
+out vec2 UVs;
+out vec3 outNormals;
+
+void main(){
+    outNormals = (modelMatrix * vec4(normals, 0.0)).xyz;
+    outNormals = normalize(outNormals);
+    vec3 pos = position + fatness * outNormals;
+    
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(pos, 1.0);
+    UVs = texCoords;
+}
+'''
 
 fragment_shader = '''
 #version 450 core
@@ -38,6 +63,6 @@ void main(){
     float intensity = dot(outNormals, -dirLight);
     intensity = min(1, intensity);
     intensity = max(0, intensity);
-    fragColor = texture(tex, UVs);
+    fragColor = texture(tex, UVs) * intensity;
 }
 '''

@@ -3,7 +3,7 @@ from pygame.locals import *
 import glm
 from gl import Renderer
 from Model import Model
-from shaders import vertex_shader, fragment_shader
+from shaders import vertex_shader, fragment_shader, fat_shader
 
 width = 960
 height = 540
@@ -12,8 +12,8 @@ pygame.init()
 
 screen = pygame.display.set_mode((width, height), pygame.OPENGL | pygame.DOUBLEBUF)
 clock = pygame.time.Clock()
-rend = Renderer(screen)
-rend.setShaders(vertex_shader, fragment_shader)
+rend = Renderer(screen, target=(0, 6, -10))
+rend.setShaders(fat_shader , fragment_shader)
 
 triangleData = [
     -0.5, -0.5, 0.0,      0.0, 0.0,     0.0, 0.0, 1.0,
@@ -24,9 +24,9 @@ triangleData = [
     0.5, 0.5, 0.0,        1.0, 1.0,     0.0, 0.0, 1.0,
     0.5, -0.5, 0.0,       1.0, 0.0,     0.0, 0.0, 1.0
 ]
-triangleModel = Model("models/stormtrooper.obj", scale=(2,2,2), position=(0,0,-10), textureName="textures/Stormtrooper_D.png")
+objectModel = Model("models/stormtrooper.obj", scale=(2, 2, 2), position=(0, 0, -10), textureName="textures/Stormtrooper_D.png")
 
-rend.scene.append(triangleModel)
+rend.scene.append(objectModel)
 
 
 isRunning = True
@@ -41,6 +41,9 @@ while isRunning:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 isRunning = False
+
+            if event.key == pygame.K_SPACE:
+                rend.toggleFillMode()
 
     if keys[pygame.K_d]:
         rend.camPosition.x += 2 * deltaTime
@@ -57,8 +60,21 @@ while isRunning:
     elif keys[pygame.K_e]:
         rend.camPosition.y -= 5 * deltaTime
 
-    triangleModel.rotation.y += 45 * deltaTime
+    if keys[pygame.K_UP]:
+        if rend.fatness<1.0:
+            rend.fatness += 1 * deltaTime
+    elif keys[pygame.K_DOWN]:
+        if rend.fatness > 0.0:
+            rend.fatness -= 1 * deltaTime
 
+    if keys[pygame.K_RIGHT]:
+        objectModel.rotation.y += 45 * deltaTime
+    elif keys[pygame.K_LEFT]:
+        objectModel.rotation.y -= 45 * deltaTime
+
+    #triangleModel.rotation.y += 45 * deltaTime
+
+    rend.update()
     rend.render()
     pygame.display.flip()
 

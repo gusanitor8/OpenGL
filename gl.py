@@ -2,25 +2,33 @@ import glm
 from OpenGL.GL import *
 from OpenGL.GL.shaders import compileProgram, compileShader
 
+
 class Renderer:
-    def __init__(self, screen):
+    def __init__(self, screen, target=(0, 0, 0)):
         self.screen = screen
         _, _, self.width, self.height = screen.get_rect()
 
         self.clearColor = [0, 0, 0]
+        self.target = glm.vec3(*target)
 
         glEnable(GL_DEPTH_TEST)
-        glGenerateMipmap(GL_TEXTURE_2D)
+        glEnable(GL_CULL_FACE)
+
+        #glGenerateMipmap(GL_TEXTURE_2D)
         glViewport(0, 0, self.width, self.height)
 
         self.scene = []
         self.activeShader = None
 
-        self.dirLight = glm.vec3(1,0,0)
+        self.dirLight = glm.vec3(1, 0, 0)
+        self.fatness = 0
+
+        self.fillMode = True
 
         # view matrix
         self.camPosition = glm.vec3(0, 0, 0)
         self.camRotation = glm.vec3(0, 0, 0)
+        self.viewMatrix = self.getViewMatrix()
 
         # projection matrix
         self.projectionMatrix = glm.perspective(glm.radians(60),
@@ -28,6 +36,15 @@ class Renderer:
                                                 0.1,
                                                 1000)
 
+    def toggleFillMode(self):
+        self.fillMode = not self.fillMode
+        if self.fillMode:
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+            glEnable(GL_CULL_FACE)
+
+        else:
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+            glDisable(GL_CULL_FACE)
 
     def getViewMatrix(self):
         identity = glm.mat4(1)
@@ -43,7 +60,6 @@ class Renderer:
 
         return glm.inverse(camMatrix)
 
-
     def setShaders(self, vertexShader, fragmentShader):
         if vertexShader is not None and fragmentShader is not None:
             self.activeShader = compileProgram(compileShader(vertexShader, GL_VERTEX_SHADER),
@@ -52,7 +68,9 @@ class Renderer:
         else:
             self.activeShader = None
 
-
+    def update(self):
+        #self.viewMatrix = self.getViewMatrix()
+        self.viewMatrix = glm.lookAt(self.camPosition, self.target, glm.vec3(0,1,0))
 
     def render(self):
         glClearColor(self.clearColor[0], self.clearColor[1], self.clearColor[2], 1.0)
@@ -64,7 +82,7 @@ class Renderer:
             glUniformMatrix4fv(glGetUniformLocation(self.activeShader, 'viewMatrix'),
                                1,
                                GL_FALSE,
-                               glm.value_ptr(self.getViewMatrix()))
+                               glm.value_ptr(self.viewMatrix))
 
             glUniformMatrix4fv(glGetUniformLocation(self.activeShader, 'projectionMatrix'),
                                1,
@@ -72,8 +90,11 @@ class Renderer:
                                glm.value_ptr(self.projectionMatrix))
 
             glUniform3fv(glGetUniformLocation(self.activeShader, 'dirLight'),
-                               1,
-                               glm.value_ptr(self.dirLight))
+                         1,
+                         glm.value_ptr(self.dirLight))
+
+            glUniform1f(glGetUniformLocation(self.activeShader, 'fatness'),
+                         self.fatness)
 
         for obj in self.scene:
             if self.activeShader is not None:
@@ -82,4 +103,3 @@ class Renderer:
                                    GL_FALSE,
                                    glm.value_ptr(obj.getModelMatrix()))
             obj.render()
-
