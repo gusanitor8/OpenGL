@@ -10,6 +10,7 @@ class Renderer:
 
         self.clearColor = [0, 0, 0]
         self.target = glm.vec3(*target)
+        self.fov = 60
 
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_CULL_FACE)
@@ -32,7 +33,13 @@ class Renderer:
         self.viewMatrix = self.getViewMatrix()
 
         # projection matrix
-        self.projectionMatrix = glm.perspective(glm.radians(60),
+        self.projectionMatrix = glm.perspective(glm.radians(self.fov),
+                                                self.width / self.height,
+                                                0.1,
+                                                1000)
+
+    def getProjectionMatrix(self):
+        return glm.perspective(glm.radians(self.fov),
                                                 self.width / self.height,
                                                 0.1,
                                                 1000)
@@ -78,8 +85,10 @@ class Renderer:
             self.activeShader = None
 
     def update(self):
-        #self.viewMatrix = self.getViewMatrix()
-        self.viewMatrix = glm.lookAt(self.camPosition, self.target, glm.vec3(0,1,0))
+        self.viewMatrix = self.getViewMatrix()
+        #self.viewMatrix = glm.lookAt(self.camPosition, self.target, glm.vec3(0,1,0))
+        self.projectionMatrix = self.getProjectionMatrix()
+
 
     def render(self):
         glClearColor(self.clearColor[0], self.clearColor[1], self.clearColor[2], 1.0)
