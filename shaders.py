@@ -11,6 +11,7 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 uniform float fatness;
+uniform float time;
 
 out vec2 UVs;
 out vec3 outNormals;
@@ -19,6 +20,7 @@ void main(){
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
     UVs = texCoords;
     outNormals = (modelMatrix * vec4(normals, 0.0)).xyz;
+    outNormals = normalize(outNormals);
 }
 '''
 
@@ -32,6 +34,7 @@ layout (location = 2) in vec3 normals;
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform float time;
 uniform float fatness;
 
 out vec2 UVs;
@@ -53,6 +56,7 @@ fragment_shader = '''
 layout (binding = 0) uniform sampler2D tex; 
 
 uniform vec3 dirLight;
+uniform float time;
 
 in vec2 UVs;
 in vec3 outNormals;
@@ -64,5 +68,29 @@ void main(){
     intensity = min(1, intensity);
     intensity = max(0, intensity);
     fragColor = texture(tex, UVs) * intensity;
+}
+'''
+
+acid_shader = '''
+#version 450 core
+
+layout (binding = 0) uniform sampler2D tex; 
+
+uniform vec3 dirLight;
+
+in vec2 UVs;
+in vec3 outNormals;
+uniform float time;
+
+out vec4 fragColor;
+
+void main(){
+    float intensity = dot(outNormals, -dirLight);
+    intensity = min(1, intensity);
+    intensity = max(0, intensity);        
+    fragColor = texture(tex, UVs);
+
+    fragColor.x = mod((fragColor.y + sin(time)), 1.0);
+    fragColor.y = mod((fragColor.x + sin(time)), 1.0);
 }
 '''

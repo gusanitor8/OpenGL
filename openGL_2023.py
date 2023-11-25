@@ -3,7 +3,7 @@ from pygame.locals import *
 import glm
 from gl import Renderer
 from Model import Model
-from shaders import vertex_shader, fragment_shader, fat_shader
+from shaders import vertex_shader, fragment_shader, fat_shader, acid_shader
 
 
 def run():
@@ -15,23 +15,28 @@ def run():
     screen = pygame.display.set_mode((width, height), pygame.OPENGL | pygame.DOUBLEBUF)
     clock = pygame.time.Clock()
     rend = Renderer(screen, target=(0, 6, -10))
-    rend.setShaders(vertex_shader, fragment_shader)
+    rend.setShaders(vertex_shader, acid_shader)
 
-    stormtrooper_model = Model("models/stormtrooper.obj", scale=(2, 2, 2), position=(0, 0, -10),
+    stormtrooper_model = Model("models/stormtrooper.obj", scale=(2, 2, 2), position=(0, -5, -10),
                                textureName="textures/Stormtrooper_D.png")
-    face_model = Model("models/model.obj", position=(0, 0, -10), textureName="textures/model.bmp")
-    cat_model = Model("models/cat.obj", position=(0, 0, -10), textureName="textures/cat.jpg")
+    face_model = Model("models/model.obj", scale=(3, 3, 3), position=(0, 0, -10), textureName="textures/model.bmp")
+    cat_model = Model("models/cat.obj", position=(0, -2, -10), scale=(0.1, 0.1, 0.1), rotation=(-60, 0, 20),
+                      textureName="textures/cat.jpg")
+    skull_model = Model("models/skull.obj", position=(0, 0, -10), scale=(0.2, 0.2, 0.2), rotation=(-45, 0, 0),
+                        textureName="textures/Skull.jpg")
+    chica_model = Model("models/carro.obj", position=(0,-5,-12), rotation=(0,40,0), scale=(0.04,0.04,0.04),textureName="textures/carro.png")
 
     rend.scene.append(stormtrooper_model)
     rend.scene.append(face_model)
     rend.scene.append(cat_model)
+    rend.scene.append(skull_model)
+    rend.scene.append(chica_model)
 
     def on_mouse_move(delta_x, delta_y):
         sensitivity = 0.1
 
         rend.camRotation.x += sensitivity * delta_y
         rend.camRotation.y += sensitivity * delta_x
-
 
     prev_mouse_pos = pygame.mouse.get_pos()
     left_button_pressed = False
@@ -109,6 +114,7 @@ def run():
 
         # triangleModel.rotation.y += 45 * deltaTime
 
+        rend.elapsed_time += deltaTime
         rend.update()
         rend.render()
         pygame.display.flip()

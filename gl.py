@@ -9,6 +9,7 @@ class Renderer:
         _, _, self.width, self.height = screen.get_rect()
 
         self.clearColor = [0, 0, 0]
+        self.elapsed_time = 0.0
         self.target = glm.vec3(*target)
         self.fov = 60
 
@@ -113,6 +114,9 @@ class Renderer:
 
             glUniform1f(glGetUniformLocation(self.activeShader, 'fatness'),
                          self.fatness)
+
+            glUniform1f(glGetUniformLocation(self.activeShader, 'time'),
+                        self.elapsed_time)
 
         if self.scene:
             obj = self.scene[self.current_obj_idx]
