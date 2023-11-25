@@ -3,7 +3,8 @@ from pygame.locals import *
 import glm
 from gl import Renderer
 from Model import Model
-from shaders import vertex_shader, fragment_shader, fat_shader, acid_shader
+from shaders import vertex_shader, fragment_shader, fat_shader, acid_shader, woobly_vertex_shader, \
+    shinny_edges_fragment_shader, noise_fragment_shader
 
 
 def run():
@@ -11,11 +12,19 @@ def run():
     height = 540
 
     pygame.init()
+    pygame.mixer.init()
+    pygame.mixer.music.load("music/rick_roll.mp3")
+    pygame.mixer.music.play(-1)
 
     screen = pygame.display.set_mode((width, height), pygame.OPENGL | pygame.DOUBLEBUF)
     clock = pygame.time.Clock()
     rend = Renderer(screen, target=(0, 6, -10))
-    rend.setShaders(vertex_shader, acid_shader)
+    curr_vertex_shader = vertex_shader
+    curr_fragment_shader = acid_shader
+    rend.setShaders(curr_vertex_shader, curr_fragment_shader)
+
+    def update_shader(render: Renderer):
+        rend.setShaders(curr_vertex_shader, curr_fragment_shader)
 
     stormtrooper_model = Model("models/stormtrooper.obj", scale=(2, 2, 2), position=(0, -5, -10),
                                textureName="textures/Stormtrooper_D.png")
@@ -24,13 +33,14 @@ def run():
                       textureName="textures/cat.jpg")
     skull_model = Model("models/skull.obj", position=(0, 0, -10), scale=(0.2, 0.2, 0.2), rotation=(-45, 0, 0),
                         textureName="textures/Skull.jpg")
-    chica_model = Model("models/carro.obj", position=(0,-5,-12), rotation=(0,40,0), scale=(0.04,0.04,0.04),textureName="textures/carro.png")
+    rick_model = Model("models/rickastley.obj", position=(0, -18, -12), rotation=(0, -25, 0), scale=(0.3, 0.3, 0.3),
+                      textureName="textures/rickastley.jpg")
 
+    rend.scene.append(rick_model)
     rend.scene.append(stormtrooper_model)
     rend.scene.append(face_model)
     rend.scene.append(cat_model)
     rend.scene.append(skull_model)
-    rend.scene.append(chica_model)
 
     def on_mouse_move(delta_x, delta_y):
         sensitivity = 0.1
@@ -61,6 +71,29 @@ def run():
                     rend.next_obj()
                 elif event.key == pygame.K_LEFT:
                     rend.prev_obj()
+
+                if event.key == pygame.K_1:
+                    curr_vertex_shader = vertex_shader
+                    update_shader(rend)
+                elif event.key == pygame.K_2:
+                    curr_fragment_shader = fragment_shader
+                    update_shader(rend)
+                elif event.key == pygame.K_3:
+                    curr_fragment_shader = acid_shader
+                    update_shader(rend)
+                elif event.key == pygame.K_4:
+                    curr_vertex_shader = fat_shader
+                    update_shader(rend)
+                elif event.key == pygame.K_5:
+                    curr_fragment_shader = shinny_edges_fragment_shader
+                    update_shader(rend)
+                elif event.key == pygame.K_6:
+                    curr_fragment_shader = noise_fragment_shader
+                    update_shader(rend)
+                elif event.key == pygame.K_7:
+                    curr_vertex_shader = woobly_vertex_shader
+                    update_shader(rend)
+
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 5:  # Zoom out

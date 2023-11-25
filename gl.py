@@ -112,6 +112,10 @@ class Renderer:
                          1,
                          glm.value_ptr(self.dirLight))
 
+            glUniform3fv(glGetUniformLocation(self.activeShader, 'camRot'),
+                         1,
+                         glm.value_ptr(self.camRotation))
+
             glUniform1f(glGetUniformLocation(self.activeShader, 'fatness'),
                          self.fatness)
 
