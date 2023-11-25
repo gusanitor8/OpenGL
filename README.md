@@ -1,5 +1,8 @@
 # Proyecto 3 - OpenGL
 
+## Video demostrativo:
+[Click Aquí](https://youtu.be/8J-m2ITfMi4)
+
 ## Índice de acciones
 
 ### CAMARA:
@@ -31,5 +34,3 @@
 * Presiona `7` para usar el woobly shader
 	
 
-# Video demostrativo:
-[Click Aquí](https://youtu.be/8J-m2ITfMi4)
