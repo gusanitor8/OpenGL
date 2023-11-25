@@ -12,6 +12,7 @@ class Renderer:
         self.elapsed_time = 0.0
         self.target = glm.vec3(*target)
         self.fov = 60
+        self.look_at = False
 
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_CULL_FACE)
@@ -87,8 +88,10 @@ class Renderer:
 
     def update(self):
         self.viewMatrix = self.getViewMatrix()
-        #self.viewMatrix = glm.lookAt(self.camPosition, self.target, glm.vec3(0,1,0))
-        self.projectionMatrix = self.getProjectionMatrix()
+        if self.look_at:
+            self.viewMatrix = glm.lookAt(self.camPosition, self.target, glm.vec3(0,1,0))
+        else:
+            self.projectionMatrix = self.getProjectionMatrix()
 
 
     def render(self):
